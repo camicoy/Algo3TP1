@@ -1,0 +1,259 @@
+\documentclass[a4paper]{article}
+\usepackage[spanish]{babel}
+\usepackage[utf8]{inputenc}
+\usepackage{fancyhdr}
+\usepackage{charter}   % tipografía
+\usepackage{graphicx}
+\usepackage{makeidx}
+
+\usepackage{float}
+\usepackage{amsmath, amsthm, amssymb}
+\usepackage{amsfonts}
+\usepackage{sectsty}
+\usepackage{wrapfig}
+\usepackage{listings} % necesario para el resaltado de sintaxis
+\usepackage{caption}
+
+\usepackage{hyperref} % agrega hipervínculos en cada entrada del índice
+\hypersetup{          % (en el pdf)
+    colorlinks=true,
+    linktoc=all,
+    citecolor=black,
+    filecolor=black,
+    linkcolor=black,
+    urlcolor=black
+}
+
+\input{codesnippet}
+\input{page.layout}
+\usepackage{underscore}
+\usepackage{caratula}
+\usepackage{url}
+\usepackage{color}
+\usepackage{clrscode3e} % necesario para el pseudocodigo (estilo Cormen)
+
+%\usepackage{algorithm}
+%\usepackage{algorithmic}
+\usepackage{algorithm}[1]
+\usepackage{algorithmic}[1]
+%\usepackage{algpseudocode}
+
+\definecolor{dkgreen}{rgb}{0,0.6,0}
+\definecolor{gray}{rgb}{0.5,0.5,0.5}
+\definecolor{mauve}{rgb}{0.58,0,0.82}
+
+\lstset{frame=tb,
+  language=JAVA,
+  aboveskip=3mm,
+  belowskip=3mm,
+  showstringspaces=false,
+  columns=flexible,
+  basicstyle={\small\ttfamily},
+  keywordstyle=\color{blue},
+  commentstyle=\color{dkgreen},
+  stringstyle=\color{mauve},
+  breaklines=true,
+  breakatwhitespace=true,
+  tabsize=3,
+  numbers=left,
+  xleftmargin=2em,
+  frame=single,
+  framexleftmargin=2em,
+  numbersep=5pt,                   % how far the line-numbers are from the code
+  numberstyle=\small\color{gray} % the style that is used for the line-numbers
+ }
+
+\begin{document}
+
+
+\thispagestyle{empty}
+\materia{Algoritmos y estructuras de dato III}
+\submateria{Segundo Cuatrimestre de 2015}
+\titulo{Diseño  y técnicas de algoritmos}
+\subtitulo{Aplicacion de técnica}
+\integrante{Coy, Camila Paula}{33/14}{camicoy94@gmail.com} % por cada integrante (apellido, nombre) (n° libreta) (e-mail)
+\integrante{Fadel, Uriel}{104/14}{urielfadel@gmail.com}
+\integrante{Porto, Jorge}{376/11}{cuanto.p.p@gmail.com}
+\integrante{Soliz, Carlos}{406/12}{rcarlos.cs@gmail.com}
+
+\maketitle
+\newpage
+
+\thispagestyle{empty}
+\vfill
+
+\thispagestyle{empty}
+\vspace{1.5cm}
+\tableofcontents
+\newpage
+
+%\normalsize
+
+\newpage
+\section{Objetivos generales}
+
+El objetivo del siguiente trabajo sera la practica de dístintos técnicas para elaboracion de algoritmos.
+Tal trabajo consta de tres situaciones que bien pueden ser aplicadas a la vida real. 
+Uno de los cuales se resolvera aplicando un algoritmo golozo, otros
+utilizaran estructuras de datos eficiente para lograr el objetivo de performance y como ultima tecnica algoritmica se hara uso de backtraking
+con la meta de obtener la solucion deseada.  
+%\newpage
+
+
+
+%\newpage
+\section{Problema 1}
+\input{problema1}
+
+\newpage
+\section{Problema 2}
+\input{problema2}
+
+\newpage
+\section{Problema 3}
+\input{problema3}
+
+
+\newpage
+
+
+
+\newpage
+\section{Apéndice 1: Otras secciones relevantes del código}
+En esta sección, adjuntamos parte del código correspondiente a la resolución de cada problema
+que consideramos más \textbf{relevante}.
+
+\subsection{Código del Problema 1}
+
+\begin{lstlisting}
+public class Telegrafo {
+	public static int maximasEstacionesConectadas( int[] estaciones , int mCable ) {
+		
+		int desde=0;
+		int hasta=0;
+		int cantEstacionesConectadas=0;
+		int cantidadDeEstacionesMaxima=0;
+		boolean mePase=false;
+		while(hasta<estaciones.length-1){
+			while(hasta<estaciones.length && estaciones[hasta]-estaciones[desde]<=mCable){
+				hasta++;
+				mePase=true;
+			}
+			if(mePase) {
+				hasta--;
+				mePase=false;
+			}
+			
+			cantEstacionesConectadas=desde-hasta==0 ? 0 : hasta-desde+1;
+			cantidadDeEstacionesMaxima=Math.max(cantidadDeEstacionesMaxima, cantEstacionesConectadas);
+			desde++;
+		}
+		return cantidadDeEstacionesMaxima;
+	}
+}
+\end{lstlisting}
+
+%\vspace*{0.5cm}
+
+%\begin{lstlisting}
+%int main(){
+%  return 0;
+%}
+%\end{lstlisting}
+
+\newpage
+\subsection{Código del Problema 2}
+
+\begin{lstlisting}
+	public static List<Integer> obtenerMedianas(List<Integer> numeros_entrada){
+		
+		List<Integer> medianas= new ArrayList<Integer>();//aca retorno las medianas parciales
+		
+		Comparator<Integer> inversoComparador =Comparator.<Integer> reverseOrder();
+		
+		PriorityQueue<Integer> mitadMenores = new PriorityQueue<Integer>(inversoComparador);//es un maxHeap
+
+		PriorityQueue<Integer> mitadMayores= new PriorityQueue<Integer>(); // es un minHeap
+		
+		
+		for(Integer e:numeros_entrada ){
+			
+			//primero inserto el nuevo elemento donde corresponda
+			
+			if(mitadMenores.isEmpty()){
+				mitadMenores.add(e);
+			}else if(mitadMayores.isEmpty()){
+						
+				Integer primero= mitadMenores.peek();
+				
+				if(primero>e){
+					mitadMayores.add(mitadMenores.poll());
+					mitadMenores.add(e);
+				}else{
+					mitadMayores.add(e);
+				}
+				
+				
+			}else if(e>mitadMayores.peek()) {
+				mitadMayores.add(e);
+			}else {
+				mitadMenores.add(e);
+			}
+			
+			//luego rebalanceo para que queden con igual cantidad, o en caso de impar que halla uno mas en la izquierda
+			
+			if(mitadMayores.size()>mitadMenores.size()){
+				
+				mitadMenores.add(mitadMayores.poll()); //poll no solo devueve la raiz, tambien la elimina del heap
+				
+			}else if(mitadMenores.size() - mitadMayores.size()>1){
+				
+				mitadMayores.add(mitadMenores.poll());
+				
+			}
+			
+			Integer aAgregar;
+			
+			if (mitadMenores.size() == mitadMayores.size()) {
+				
+				aAgregar= (mitadMenores.peek() + mitadMayores.peek()) / 2;
+				
+			} else {
+				
+				aAgregar= mitadMenores.peek();
+				
+			}
+			
+			medianas.add(aAgregar);
+		
+		}
+		
+		
+		return medianas;
+	}
+	
+\end{lstlisting}
+
+%\vspace*{0.5cm}
+
+%\newpage
+%\subsection{Código del Problema 3}
+
+%\begin{lstlisting}
+%int main(){
+%  return 0;
+%}
+%\end{lstlisting}
+
+%\vspace*{0.5cm}
+
+%\begin{lstlisting}
+%int main(){
+%  return 0;
+%}
+%\end{lstlisting}
+
+
+
+
+\end{document}
